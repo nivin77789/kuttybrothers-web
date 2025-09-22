@@ -2,8 +2,13 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-export default defineConfig({
-  base: "/", // or "/saasland/" if using GitHub Pages
+export default defineConfig(({ mode }) => ({
+  base: "/saasland/",
+  server: {
+    host: "::",
+    port: 8080,
+    open: true,
+  },
   plugins: [react()],
   resolve: {
     alias: {
@@ -13,10 +18,15 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: '[name].js',
+        entryFileNames: 'index.js',
         chunkFileNames: 'chunk-[name].js',
-        assetFileNames: '[name][extname]',
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name && assetInfo.name.endsWith('.css')) {
+            return 'index.css';
+          }
+          return 'asset-[name][extname]';
+        },
       },
     },
   },
-});
+}));
