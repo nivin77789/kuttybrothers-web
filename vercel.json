@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/saasland/(.*)", "destination": "/saasland/index.html" }
+  ]
+}
