@@ -3,11 +3,11 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 export default defineConfig({
-  base: "/", // root for Vercel deployment
+  base: "/", // or "/saasland/" if using GitHub Pages
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"), // allows imports like "@/components/..."
+      "@": path.resolve(__dirname, "./src"),
     },
   },
   build: {
