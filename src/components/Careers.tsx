@@ -1,39 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, onSnapshot } from "firebase/firestore";
 
-const jobOpenings = [
-  {
-    title: "Frontend Developer",
-    location: "Bangalore, India",
-    type: "Full-time",
-    description:
-      "We are looking for a skilled Frontend Developer to build engaging web applications using React.js and modern UI frameworks.",
-  },
-  {
-    title: "Backend Developer",
-    location: "Bangalore, India",
-    type: "Full-time",
-    description:
-      "Join our backend team to design and implement robust server-side solutions, APIs, and databases for our SaaS products.",
-  },
-  {
-    title: "UI/UX Designer",
-    location: "Remote",
-    type: "Contract",
-    description:
-      "Creative designer needed to create intuitive and visually appealing interfaces for web and mobile applications.",
-  },
-  {
-    title: "Operations Manager",
-    location: "Bangalore, India",
-    type: "Full-time",
-    description:
-      "Lead and manage daily operations, ensure project delivery timelines, and streamline internal processes.",
-  },
-];
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyBcYAP9pbEi9OF5wD7yfE_GXXbeVQIepQ8",
+  authDomain: "kutty-website.firebaseapp.com",
+  projectId: "kutty-website",
+  storageBucket: "kutty-website.firebasestorage.app",
+  messagingSenderId: "134298292317",
+  appId: "1:134298292317:web:c004e3d59861f659a37db4",
+  measurementId: "G-RQP6423MPZ",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+interface Career {
+  id?: string;
+  title: string;
+  location: string;
+  type: string;
+  description: string;
+}
 
 const Careers = () => {
+  const [jobOpenings, setJobOpenings] = useState<Career[]>([]);
+
+  // Real-time fetch from Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "careers"), (snapshot) => {
+      const jobs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Career[];
+      setJobOpenings(jobs);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="bg-saas-black text-white min-h-screen flex flex-col">
       {/* Navbar */}
@@ -52,9 +58,9 @@ const Careers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {jobOpenings.map((job, index) => (
+            {jobOpenings.map((job) => (
               <div
-                key={index}
+                key={job.id}
                 className="bg-saas-darkGray p-6 rounded-xl border border-gray-800 hover:border-saas-orange/50 transition-all duration-300 card-shadow"
               >
                 <h3 className="text-xl font-semibold text-white mb-2">{job.title}</h3>

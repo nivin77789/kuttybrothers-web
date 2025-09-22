@@ -2,31 +2,21 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
-export default defineConfig(({ mode }) => ({
-  base: "/saasland/",
-  server: {
-    host: "::",
-    port: 8080,
-    open: true,
-  },
+export default defineConfig({
+  base: "/", // root for Vercel deployment
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "./src"), // allows imports like "@/components/..."
     },
   },
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: 'index.js',
+        entryFileNames: '[name].js',
         chunkFileNames: 'chunk-[name].js',
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name && assetInfo.name.endsWith('.css')) {
-            return 'index.css';
-          }
-          return 'asset-[name][extname]';
-        },
+        assetFileNames: '[name][extname]',
       },
     },
   },
-}));
+});
