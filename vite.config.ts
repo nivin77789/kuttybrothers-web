@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 
 export default defineConfig({
-  base: "/", // Important for subpath deployment
+  base: "/saasland/", // Important for subpath deployment
   server: {
     host: "::",
     port: 8080,
